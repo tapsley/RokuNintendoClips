@@ -1,0 +1,47 @@
+<component name="SearchScreen" extends="Group"  initialFocus="keyboard">
+    <script type="text/brightscript" uri="SearchScreen.brs" />
+	 <interface>
+        <!-- Specifies the content for the Grid -->
+        <field id="content" type="node" alias="itemsGrid.content" />
+        <field id="category" type="string" />
+        <field id="input" type="string" />
+        <field id="selectedItem" type="string" />
+    </interface>
+    <children>
+         
+        <MiniKeyboard 
+            id="keyboard" 
+            translation="[ 100, 100 ]" />
+    
+        <LabelList
+            id = "itemList"
+            translation = "[ 550, 100 ]"
+            itemSize = "[ 440, 48 ]"
+            itemSpacing = "[ 0, 0 ]"/>
+
+        <PosterGrid
+            id="itemsGrid"
+            translation="[510,100]"
+            basePosterSize="[200,200]"
+            itemSpacing="[32,32]"
+            caption1NumLines="1"
+            caption1Font="font:SmallBoldSystemFont"
+            caption1Color="0xFEDF00"
+            numColumns="3"
+            numRows="4"/>
+
+        <Label
+            id="loadingIndicator"
+            text="Loading..."
+            width="500"
+            height="500"
+            translation="[580, 110]"
+            horizAlign="center"
+            vertAlign="center"
+            visible="false"
+            font="font:LargeBoldSystemFont"
+            color="0xFEDF00"
+        />
+
+    </children>
+</component>

@@ -1,0 +1,71 @@
+<component name="DetailsScreen" extends="Group" initialFocus="playButton">
+    <script type="text/brightscript" uri="DetailsScreen.brs" />
+	<interface>
+        <!-- Specifies the content for the Grid -->
+        <field id="content" type="node" alias="detailsList.content" />
+        <field id="itemUrl" type="string"/>
+        <field id="playClicked" type="boolean" />
+    </interface>
+    <children>
+
+        <LabelList
+            id="detailsList"
+            visible="true"
+            width="1520"
+            height="1500"
+            translation="[700, 700]"
+            itemSize="[540, 15]"
+            itemSpacing="[0, 12]"
+            drawFocusFeedback="false"
+            scaleRotateCenter="[0.5,0.0]"
+            scale="[2.0, 1.3]"
+            numRows="20"
+            color="0xFEDF00" 
+            font="font:SmallBoldSystemFont"
+            textHorizAlign="center" />
+
+        <Animation
+            id = "CrawlScroll"
+            duration = "60"
+            easeFunction = "linear" >
+        
+            <Vector2DFieldInterpolator
+                key = "[ 0.0, 0.5, 1.0 ]"
+                keyValue = "[ [10.0,700.0], [85.0,475.0], [160.0,250.0] ]"
+                fieldToInterp = "detailsList.translation" />     
+        </Animation>
+
+        <Animation
+            id = "CrawlScale"
+            duration = "60"
+            easeFunction = "linear" >
+        
+            <Vector2DFieldInterpolator
+                key = "[ 0.0, 0.5, 1.0 ]"
+                keyValue = "[ [2,.70], [1.7,0.35], [1.4,0.0] ]"
+                fieldToInterp = "detailsList.scale" />      
+        </Animation>
+
+
+        <Button
+            id = "playButton"
+            text = "Play"
+            translation="[100,100]"
+            showFocusFootprint = "true"
+            minWidth = "100" />
+
+        <Button
+            id = "wookieeButton"
+            iconUri = "pkg:/images/Chewbacca.png"
+            focusedIconUri = "pkg:/images/Chewbacca.png"
+            translation="[1000,100]"
+            scale="[0.5,0.5]"
+            showFocusFootprint = "false"
+            maxWidth = "0" 
+            height="200"/>
+
+        <Audio
+            id="audio"
+            />  
+    </children>
+</component>

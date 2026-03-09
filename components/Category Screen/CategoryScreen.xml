@@ -1,0 +1,30 @@
+<component name="CategoryScreen" extends="Group"  initialFocus="categoryGrid">
+    <script type="text/brightscript" uri="CategoryScreen.brs" />
+	 <interface>
+        <field id="content" type="node" alias="categoryGrid.content" />
+        <field id="selectedCategory" type="string" />
+    </interface>
+    <children>
+        <Label
+	        id="titleLabel"
+            text="Select a Category to Begin Your Journey"
+            font="font:ExtraLargeBoldSystemFont"
+            horizAlign="center"
+	        width="1020"
+			translation="[130,120]"
+            color="0xFEDF00" />
+
+        <PosterGrid
+            id="categoryGrid"
+            translation="[100,200]"
+            basePosterSize="[200,200]"
+            itemSpacing="[32,32]"
+            caption1NumLines="1"
+            caption1Font="font:MediumBoldSystemFont"
+            caption1Color="0xFEDF00"
+            numColumns="5"
+            numRows="3"/>
+
+
+    </children>
+</component>

@@ -1,0 +1,9 @@
+<component name="GameLoaderTask" extends="Task">
+    <interface>
+        <field id="content" type="node" />
+        <field id="game" type="string" />
+        <field id="input" type="string" />
+    </interface>
+
+    <script type="text/brightscript" uri="GameLoaderTask.brs" />
+</component>

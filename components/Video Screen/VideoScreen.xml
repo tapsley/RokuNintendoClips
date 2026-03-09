@@ -1,0 +1,15 @@
+<component name="VideoScreen" extends="Group" initialFocus="videoPlayer">
+    <script type="text/brightscript" uri="VideoScreen.brs" />
+	<interface>
+        <!-- Specifies the content for the Grid -->
+        <field id="itemUrl" type="string"/>
+    </interface>
+    <children>
+        <Video
+            id="videoPlayer"
+            width="1280"
+            height="720"
+            translation="[0,0]"
+            />
+    </children>
+</component>
