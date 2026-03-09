@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+
+<component name="HomeScreen" extends="Group"  initialFocus="gameGrid">
+    <script type="text/brightscript" uri="HomeScreen.brs" />
+	 <interface>
+        <field id="content" type="node" alias="gameGrid.content" />
+        <field id="selectedGame" type="string" />
+        <field id="searchRequested" type="string" />
+    </interface>
+    <children>
+
+        <Group
+            id="searchButton"
+            translation="[70, 255]">
+            <Rectangle
+                id="searchCircle"
+                width="110"
+                height="110"
+                cornerRadius="55"
+                color="0xFFFFFFFF" />
+            <Label
+                id="searchGlyph"
+                translation="[44, 34]"
+                text="S"
+                width="24"
+                horizAlign="center"
+                color="0x0D61D3FF" />
+            <Label
+                id="searchText"
+                translation="[10, 118]"
+                text="Search"
+                width="90"
+                horizAlign="center"
+                color="0x0D61D3FF" />
+        </Group>
+
+        <PosterGrid
+            id="gameGrid"
+            translation="[195,155]"
+            basePosterSize="[200,200]"
+            itemSpacing="[30,28]"
+            caption1NumLines="1"
+            caption1Font="font:SmallSystemFont"
+            caption1Color="0x0D61D3"
+            numColumns="4"
+            animateToItem="1"
+            enableCaptionScroller="true"
+            captionBackgroundBitmapUri="pkg:/images/caption_bg.png"
+            numRows="3"/>
+
+
+    </children>
+</component>

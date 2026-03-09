@@ -4,6 +4,7 @@ sub Init()
     m.loadingIcon.visible = true
     m.keyboard = m.top.findNode("keyboard")
     m.keyboard.textEditBox.hintText = "Search for something"
+    m.keyboard.textEditBox.textColor = "0x0D61D3"
 
     m.keyboard.ObserveField("text", "OnTextChanged")
     m.itemsList.ObserveField("content", "OnContentChanged")
@@ -23,12 +24,9 @@ function OnTextChanged()
 end function
 
 function ItemSelected()
-    'When item is selected, take user to the details page for that item
+    'When item is selected, signal selected index so logic can play that clip.
     itemIndex = m.itemsList.itemSelected
-    itemUrl = m.itemsList.content.getChild(itemIndex).shortdescriptionline2
-    print "Selected item URL: " + itemUrl
-    'This will signal the screenstack to open details screen
-    m.top.selectedItem = itemUrl
+    m.top.selectedItem = itemIndex
 end function
 
 function onKeyEvent(key as String, press as Boolean) as Boolean

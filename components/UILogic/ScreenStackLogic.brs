@@ -27,12 +27,27 @@ sub CloseScreen(node as Object)
         prev = m.screenStack.Peek()
         if prev <> invalid
             prev.visible = true
-            ' Try to move focus into a known interactive child so the cursor/selection is visible
+            ' Move focus into the primary interactive child on the previous screen.
             child = invalid
             child = prev.FindNode("categoryGrid")
             if child = invalid then
                 child = prev.FindNode("itemsGrid")
             end if
+            if child = invalid then
+                child = prev.FindNode("itemsList")
+            end if
+            if child = invalid then
+                child = prev.FindNode("playButton")
+            end if
+            if child = invalid then
+                child = prev.FindNode("gameGrid")
+                if child <> invalid and m.selectedIndex <> invalid and m.selectedIndex.Count() > 0 then
+                    if child.HasField("jumpToItem") then
+                        child.jumpToItem = m.selectedIndex[0]
+                    end if
+                end if
+            end if
+
             if child <> invalid then
                 child.SetFocus(true)
             else
@@ -55,62 +70,27 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     return handled
 end function
 
-sub ShowCategoryScreen()
-    m.CategoryScreen = CreateObject("roSGNode", "CategoryScreen")
-    m.CategoryScreen.ObserveField("selectedCategory", "OnCategoryChosen")
-    RunGameTask()
-    ShowScreen(m.CategoryScreen) ' show CategoryScreen
-end sub
 
-sub ShowSearchScreen(category as string)
-    m.SearchScreen = CreateObject("roSGNode", "SearchScreen")
-    m.SearchScreen.category = category
-    m.SearchScreen.ObserveField("input", "OnSearchTextChanged")
-    m.SearchScreen.ObserveField("selectedItem", "OnItemChosen")
-    ShowScreen(m.SearchScreen) ' show SearchScreen
-end sub
-
-sub ShowDetailsScreen(itemUrl as string)
-    m.DetailsScreen = CreateObject("roSGNode", "DetailsScreen")
-    m.DetailsScreen.itemUrl = itemUrl
-    m.DetailsScreen.ObserveField("playClicked", "OnPlayButtonSelected")
-    m.DetailsScreen.ObserveField("isWookiee", "OnWookieeButtonSelected")
-    ShowScreen(m.DetailsScreen)
-end sub
-
-sub ShowVideoScreen(itemUrl as string)
-    m.VideoScreen = CreateObject("roSGNode", "VideoScreen")
-    m.VideoScreen.itemUrl = itemUrl
-    ShowScreen(m.VideoScreen)
-end sub
-
-
-sub OnCategoryChosen()
-    category = m.CategoryScreen.selectedCategory
-    m.CategoryScreen.selectedCategory = "" 'reset selected category
-    ShowSearchScreen(category)
-    RunContentTask(category, "")
-end sub
-
-sub OnSearchTextChanged()
-    input = m.SearchScreen.input
-    category = m.SearchScreen.category
-    RunContentTask(category, input)
-end sub
 
 sub OnItemChosen()
-    itemUrl = m.SearchScreen.selectedItem
-    print "On item chosen - Selected item URL: " + itemUrl
-    ShowVideoScreen(itemUrl)
-    'RunDetailsTask(itemUrl, false)
+    if m.SearchScreen = invalid or m.SearchScreen.content = invalid then return
+
+    selectedIndex = m.SearchScreen.selectedItem
+    if selectedIndex < 0 or selectedIndex >= m.SearchScreen.content.GetChildCount() then return
+
+    selectedClip = m.SearchScreen.content.GetChild(selectedIndex)
+    if selectedClip = invalid then return
+
+    node = CreateObject("roSGNode", "ContentNode")
+    node.Update({ children: [selectedClip.Clone(false)] }, true)
+    ShowVideoScreen(node, 0, true)
 end sub
 
 sub OnPlayButtonSelected()
     'ShowVideoScreen()
 end sub
 
-sub OnWookieeButtonSelected()
-    itemUrl = m.DetailsScreen.itemUrl
-    isWookiee = m.DetailsScreen.isWookiee 'this will act as a toggle on the details screen
-    RunDetailsTask(itemUrl, isWookiee)
-end sub
+
+function GetCurrentScreen()
+    return m.screenStack.Peek()
+end function

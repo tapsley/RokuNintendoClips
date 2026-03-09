@@ -1,6 +1,12 @@
 <component name="MainScene" extends="Scene">
     <script type="text/brightscript" uri="MainScene.brs" />
+    <script type="text/brightscript" uri="pkg:/source/utils.brs" />
     <script type="text/brightscript" uri="UILogic/ScreenStackLogic.brs" />
+    <script type="text/brightscript" uri="UILogic/HomeScreenLogic.brs" />
+    <script type="text/brightscript" uri="UILogic/DetailsScreenLogic.brs" />
+    <script type="text/brightscript" uri="UILogic/EpisodesScreenLogic.brs" />
+    <script type="text/brightscript" uri="UILogic/SearchScreenLogic.brs" />
+    <script type="text/brightscript" uri="UILogic/VideoPlayerLogic.brs" />
     <script type="text/brightscript" uri="UILogic/ContentTaskLogic.brs" />
     <children>
     </children>

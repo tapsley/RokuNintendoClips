@@ -1,7 +1,8 @@
 sub Init()
-    'm.top.backgroundUri= "pkg:/images/space_background.jpg"
+    m.top.backgroundUri= "pkg:/images/home_page.png"
+    m.selectedIndex = [0, 0]
     InitScreenStack()
-    ShowCategoryScreen()
+    ShowHomeScreen()
 end sub
 
     

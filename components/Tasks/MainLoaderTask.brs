@@ -5,7 +5,16 @@ end sub
 sub GetCategoryContent()
     
     contentNode = CreateObject("roSGNode", "ContentNode")
-    url = "https://www.tapsley.space/api/videos/search?game=" + m.top.game + "&q="  + m.top.input
+    query = m.top.input
+    if query = invalid then query = ""
+
+    game = m.top.game
+    if game = invalid then game = ""
+
+    url = "https://www.tapsley.space/api/videos/search?q=" + query
+    if game <> "" then
+        url = "https://www.tapsley.space/api/videos/search?game=" + game + "&q=" + query
+    end if
 
     xfer = CreateObject("roURLTransfer")
     xfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
@@ -38,16 +47,45 @@ end sub
 function GetItemData(game as Object) as Object
     item = {}
     if Type(game) = "roAssociativeArray"
-        item.hdgridposterurl = "pkg:/images/People_Icon.jpg"
-        item.hdposterurl = "pkg:/images/People_Icon.jpg"
+        videoUrl = ""
+        if game.url <> invalid then
+            videoUrl = game.url
+        end if
 
-        item.shortdescriptionline1 = game.title
-        item.shortdescriptionline2 = game.url
-    else
         item.hdgridposterurl = "pkg:/images/People_Icon.jpg"
         item.hdposterurl = "pkg:/images/People_Icon.jpg"
+        item.title = game.title
+        item.shortdescriptionline1 = game.title
+        item.shortdescriptionline2 = game.description
+        item.url = videoUrl
+        item.streamformat = GuessStreamFormat(videoUrl)
+    else
+        videoUrl = ""
+        if game.url <> invalid then
+            videoUrl = game.url
+        end if
+
+        item.hdgridposterurl = "pkg:/images/People_Icon.jpg"
+        item.hdposterurl = "pkg:/images/People_Icon.jpg"
+        item.title = "Untitled"
         item.shortdescriptionline1 = "Untitled"
-        item.shortdescriptionline2 = game.url
+        item.shortdescriptionline2 = game.description
+        item.url = videoUrl
+        item.streamformat = GuessStreamFormat(videoUrl)
     end if
     return item
+end function
+
+function GuessStreamFormat(url as String) as String
+    lowerUrl = LCase(url)
+
+    if Instr(1, lowerUrl, ".m3u8") > 0 then
+        return "hls"
+    else if Instr(1, lowerUrl, ".mpd") > 0 then
+        return "dash"
+    else if Instr(1, lowerUrl, ".ism") > 0 or Instr(1, lowerUrl, "manifest") > 0 then
+        return "ism"
+    end if
+
+    return "mp4"
 end function
