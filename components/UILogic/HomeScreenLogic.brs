@@ -2,6 +2,7 @@ sub ShowHomeScreen()
     m.HomeScreen = CreateObject("roSGNode", "HomeScreen")
     m.HomeScreen.ObserveField("selectedGame", "OnGameChosen")
     m.HomeScreen.ObserveField("searchRequested", "OnHomeSearchChosen")
+    m.HomeScreen.ObserveField("randomRequested", "OnHomeRandomChosen")
     RunGameTask()
     print "Home screen created"
     ShowScreen(m.HomeScreen) ' show HomeScreen
@@ -18,6 +19,9 @@ sub OnGameChosen()
     m.HomeScreen.selectedGame = "" 'reset selected game
     'ShowSearchScreen(game)
     ShowDetailsScreen() 'show details screen with no content while we load results
+    if m.DetailsScreen <> invalid then
+        m.DetailsScreen.gameTitle = ToDisplayGameTitle(game)
+    end if
     RunContentTask(game, "")
 end sub
 
@@ -25,3 +29,30 @@ sub OnHomeSearchChosen()
     if m.HomeScreen = invalid then return
     ShowSearchScreen()
 end sub
+
+sub OnHomeRandomChosen()
+    if m.HomeScreen = invalid then return
+    StartRandomVideoStream()
+end sub
+
+function ToDisplayGameTitle(game as String) as String
+    if game = invalid or game = "" then return ""
+
+    words = game.Split(" ")
+    formattedWords = []
+    for each rawWord in words
+        word = rawWord.Trim()
+        if word = "" then
+            continue for
+        end if
+
+        firstChar = UCase(Left(word, 1))
+        if Len(word) > 1 then
+            formattedWords.Push(firstChar + LCase(Mid(word, 2)))
+        else
+            formattedWords.Push(firstChar)
+        end if
+    end for
+
+    return formattedWords.Join(" ")
+end function

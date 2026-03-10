@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<component name="RandomLoaderTask" extends="Task">
+	<script type="text/brightscript" uri="RandomLoaderTask.brs" />
+	<interface>
+		<field id="content" type="node" />
+		<field id="error" type="string" />
+	</interface>
+</component>

@@ -6,33 +6,23 @@
         <field id="content" type="node" alias="gameGrid.content" />
         <field id="selectedGame" type="string" />
         <field id="searchRequested" type="string" />
+        <field id="randomRequested" type="string" />
     </interface>
     <children>
 
-        <Group
+        <Poster
             id="searchButton"
-            translation="[70, 255]">
-            <Rectangle
-                id="searchCircle"
-                width="110"
-                height="110"
-                cornerRadius="55"
-                color="0xFFFFFFFF" />
-            <Label
-                id="searchGlyph"
-                translation="[44, 34]"
-                text="S"
-                width="24"
-                horizAlign="center"
-                color="0x0D61D3FF" />
-            <Label
-                id="searchText"
-                translation="[10, 118]"
-                text="Search"
-                width="90"
-                horizAlign="center"
-                color="0x0D61D3FF" />
-        </Group>
+            translation="[35,300]"
+            width="90"
+            height="90"
+            uri="pkg:/images/search_icon.png" />
+
+        <Poster
+            id="randomButton"
+            translation="[35,390]"
+            width="90"
+            height="90"
+            uri="pkg:/images/random_icon.png" />
 
         <PosterGrid
             id="gameGrid"

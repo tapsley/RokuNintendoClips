@@ -11,7 +11,7 @@
         <MiniKeyboard 
             id="keyboard" 
             keyColor="0x0D61D3"
-            translation="[ 130, 150 ]" />
+            translation="[ 150, 150 ]" />
     
         <LabelList
             id = "itemList"
@@ -21,9 +21,9 @@
 
         <PosterGrid
             id="itemsGrid"
-            translation="[540,150]"
-            basePosterSize="[200,200]"
-            itemSpacing="[32,32]"
+            translation="[550,150]"
+            basePosterSize="[192,108]"
+            itemSpacing="[25,25]"
             caption1NumLines="1"
             caption1Font="font:SmallBoldSystemFont"
             caption1Color="0x0D61D3"

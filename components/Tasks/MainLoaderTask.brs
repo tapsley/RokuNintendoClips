@@ -52,8 +52,13 @@ function GetItemData(game as Object) as Object
             videoUrl = game.url
         end if
 
-        item.hdgridposterurl = "pkg:/images/People_Icon.jpg"
-        item.hdposterurl = "pkg:/images/People_Icon.jpg"
+        posterUri = "pkg:/images/People_Icon.jpg"
+        if game.thumbnailUrl <> invalid and game.thumbnailUrl <> "" then
+            posterUri = game.thumbnailUrl
+        end if
+
+        item.hdgridposterurl = posterUri
+        item.hdposterurl = posterUri
         item.title = game.title
         item.shortdescriptionline1 = game.title
         item.shortdescriptionline2 = game.description

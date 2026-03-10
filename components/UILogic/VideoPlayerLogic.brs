@@ -17,27 +17,63 @@ sub ShowVideoScreen(rowContent as Object, selectedItem as Integer, isSeries = fa
     end if
 
     m.isSeries = isSeries
-    m.videoPlayer = CreateObject("roSGNode", "Video") ' create new instance of video node for each playback
-    ' we can't set index of content which should start firstly in playlist mode.
-    ' for cases when user select second, third etc. item in the row we use the following workaround
-    if selectedItem <> 0 ' check if user select any but first item of the row
+    m.videoPlayer = CreateObject("roSGNode", "Video")
+
+    if selectedItem <> 0
         childrenClone = CloneChildren(rowContent, selectedItem)
-        ' create new parent node for our cloned items
         rowNode = CreateObject("roSGNode", "ContentNode")
         rowNode.Update({ children: childrenClone }, true)
-        m.videoPlayer.content = rowNode ' set node with children to video node content
+        m.videoPlayer.content = rowNode
     else
-        ' if playback must start from first item we clone all row node
         m.videoPlayer.content = rowContent.Clone(true)
     end if
-    m.videoPlayer.contentIsPlaylist = true ' enable video playlist (a sequence of videos to be played)
-    ShowScreen(m.videoPlayer) ' show video screen
-    m.videoPlayer.control = "play" ' start playback
+
+    m.videoPlayer.contentIsPlaylist = true
+    ShowScreen(m.videoPlayer)
+    m.videoPlayer.control = "play"
     m.videoPlayer.ObserveField("state", "OnVideoPlayerStateChange")
     m.videoPlayer.ObserveField("visible", "OnVideoVisibleChange")
 end sub
 
-sub OnVideoPlayerStateChange() ' invoked when video state is changed
+sub StartRandomVideoStream()
+    m.isRandomStream = true
+    m.randomTaskPending = false
+    RequestNextRandomVideo()
+end sub
+
+sub RequestNextRandomVideo()
+    if m.isRandomStream <> true then return
+    if m.randomTaskPending = true then return
+
+    m.randomTaskPending = true
+    m.randomTask = CreateObject("roSGNode", "RandomLoaderTask")
+    m.randomTask.ObserveField("content", "OnRandomVideoContentLoaded")
+    m.randomTask.control = "run"
+end sub
+
+sub OnRandomVideoContentLoaded()
+    m.randomTaskPending = false
+    if m.isRandomStream <> true then return
+    if m.randomTask = invalid then return
+
+    rowNode = m.randomTask.content
+    m.randomTask = invalid
+
+    if rowNode = invalid or rowNode.GetChildCount() <= 0 then
+        if m.videoPlayer <> invalid then CloseScreen(m.videoPlayer)
+        return
+    end if
+
+    if m.videoPlayer = invalid or m.videoPlayer.visible = false then
+        ShowVideoScreen(rowNode, 0, true)
+    else
+        m.videoPlayer.content = rowNode
+        m.videoPlayer.contentIsPlaylist = true
+        m.videoPlayer.control = "play"
+    end if
+end sub
+
+sub OnVideoPlayerStateChange()
     if m.videoPlayer = invalid then return
 
     state = m.videoPlayer.state
@@ -47,6 +83,11 @@ sub OnVideoPlayerStateChange() ' invoked when video state is changed
     end if
 
     if state = "finished"
+        if m.isRandomStream = true then
+            RequestNextRandomVideo()
+            return
+        end if
+
         playlistCount = 0
         if m.videoPlayer.content <> invalid then
             playlistCount = m.videoPlayer.content.GetChildCount()
@@ -54,34 +95,32 @@ sub OnVideoPlayerStateChange() ' invoked when video state is changed
 
         currentIndex = m.videoPlayer.contentIndex
         isLastItem = playlistCount <= 0 or currentIndex >= (playlistCount - 1)
-
-        ' In playlist mode, wait until the final clip is finished before closing.
-        if isLastItem then
-            CloseScreen(m.videoPlayer)
-        end if
+        if isLastItem then CloseScreen(m.videoPlayer)
     end if
 end sub
 
-sub OnVideoVisibleChange() ' invoked when video node visibility is changed
+sub OnVideoVisibleChange()
     if m.videoPlayer.visible = false and m.top.visible = true
-        ' the index of the video in the video playlist that is currently playing.
+        m.isRandomStream = false
+        m.randomTaskPending = false
+        m.randomTask = invalid
         currentIndex = m.videoPlayer.contentIndex
-        m.videoPlayer.control = "stop" ' stop playback
-        'clear video player content, for proper start of next video player
+        m.videoPlayer.control = "stop"
         m.videoPlayer.content = invalid
+
         screen = GetCurrentScreen()
-        screen.SetFocus(true) ' return focus to details screen
         newIndex = 0
         if m.selectedIndex <> invalid and m.selectedIndex.Count() > 1
             newIndex = m.selectedIndex[1]
         end if
+
         if m.isSeries = true
-           m.isSeries = false
+            m.isSeries = false
         else
-           newIndex += currentIndex
+            newIndex += currentIndex
         end if
+
         if screen <> invalid then
-            ' navigate to the last played item for supported screens.
             if screen.HasField("jumpToItem") then
                 screen.jumpToItem = newIndex
             end if
