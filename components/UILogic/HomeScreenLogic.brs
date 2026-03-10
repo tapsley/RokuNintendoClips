@@ -16,9 +16,9 @@ sub OnGameChosen()
     end if
 
     m.currentGame = game
-    m.HomeScreen.selectedGame = "" 'reset selected game
-    'ShowSearchScreen(game)
-    ShowDetailsScreen() 'show details screen with no content while we load results
+    m.HomeScreen.selectedGame = ""
+    ' Show details immediately, then populate it when content loads.
+    ShowDetailsScreen()
     if m.DetailsScreen <> invalid then
         m.DetailsScreen.gameTitle = ToDisplayGameTitle(game)
     end if

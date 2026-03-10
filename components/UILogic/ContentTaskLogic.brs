@@ -1,34 +1,32 @@
 sub RunGameTask() as void
-    m.gameTask = CreateObject("roSGNode", "GameLoaderTask") ' create task for feed retrieving
-    ' observe content so we can know when feed content will be parsed
-    'just a comment
+    m.gameTask = CreateObject("roSGNode", "GameLoaderTask")
+    ' Populate HomeScreen when the game list arrives.
     m.gameTask.ObserveField("content", "OnGameContentLoaded")
-    m.gameTask.control = "run" ' GetCategoryContent(see GameLoaderTask.brs) method is executed
+    m.gameTask.control = "run"
 end sub
 
-sub OnGameContentLoaded() ' invoked when game categories are ready
+sub OnGameContentLoaded()
     if m.HomeScreen <> invalid
         m.HomeScreen.content = m.gameTask.content
     end if
 end sub
 
-sub RunContentTask(category as string, input as string)
-    m.contentTask = CreateObject("roSGNode", "MainLoaderTask") ' create task for feed retrieving
-    'set the proper fields
-    m.contentTask.game = category
-    m.contentTask.input = input
-    ' observe content so we can know when feed content will be parsed
+sub RunContentTask(game as string, query as string)
+    m.contentTask = CreateObject("roSGNode", "MainLoaderTask")
+    ' Request either global search or game-filtered search.
+    m.contentTask.game = game
+    m.contentTask.input = query
+    ' Route loaded content to whichever screen is visible.
     m.contentTask.ObserveField("content", "OnMainContentLoaded")
-    m.contentTask.control = "run" ' GetCategoryContent(see MainLoaderTask.brs) method is executed
+    m.contentTask.control = "run"
 end sub
 
-sub OnMainContentLoaded() ' invoked when content is ready to be used
+sub OnMainContentLoaded()
     if m.SearchScreen <> invalid and m.SearchScreen.visible
-        m.SearchScreen.content = m.contentTask.content ' populate SearchScreen with content
+        m.SearchScreen.content = m.contentTask.content
     end if
 
     if m.DetailsScreen <> invalid and m.DetailsScreen.visible
-        m.ignoreNextDetailsButtonSelected = true
         m.DetailsScreen.content = m.contentTask.content
         m.DetailsScreen.jumpToItem = 0
     end if
@@ -51,17 +49,3 @@ sub OnMainContentLoaded() ' invoked when content is ready to be used
     end if
 end sub
 
-sub RunDetailsTask(url as string, isWookiee as boolean)
-    m.detailsTask = CreateObject("roSGNode", "DetailsTask") ' create task for feed retrieving
-    'set the proper fields
-    m.detailsTask.url = url
-    ' observe content so we can know when feed content will be parsed
-    m.detailsTask.ObserveField("content", "OnDetailsContentLoaded")
-    m.detailsTask.control = "run" ' GetCategoryContent(see MainLoaderTask.brs) method is executed
-end sub
-
-sub OnDetailsContentLoaded() ' invoked when content is ready to be used
-    if m.DetailsScreen <> invalid
-        m.DetailsScreen.content = m.detailsTask.content 
-    end if
-end sub

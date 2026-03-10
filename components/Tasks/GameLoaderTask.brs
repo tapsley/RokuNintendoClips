@@ -1,8 +1,8 @@
 sub Init()
-    m.top.functionName = "GetCategoryContent"
+    m.top.functionName = "LoadGamesContent"
 end sub
 
-sub GetCategoryContent()
+sub LoadGamesContent()
     
     contentNode = CreateObject("roSGNode", "ContentNode")
     url = "https://www.tapsley.space/api/videos/games"
@@ -15,14 +15,28 @@ sub GetCategoryContent()
 
     json = ParseJson(rsp)
 
-    print "response: " + rsp
     if json <> invalid
 
+        imageByGame = CreateObject("roAssociativeArray")
+        gameImages = json.Lookup("gameImages")
+        if Type(gameImages) = "roArray"
+            for each imageItem in gameImages
+                if Type(imageItem) = "roAssociativeArray"
+                    gameName = ""
+                    if imageItem.name <> invalid then gameName = LCase(imageItem.name)
+                    imageUrl = ""
+                    if imageItem.imageUrl <> invalid then imageUrl = imageItem.imageUrl
+                    if gameName <> "" and imageUrl <> "" then
+                        imageByGame[gameName] = imageUrl
+                    end if
+                end if
+            end for
+        end if
+
         value = json.Lookup("items")
-        if Type(value) = "roArray" ' if parsed key value having other objects in it       
-            for each item in value ' parse items and add them to contentNode
-                print "item: " + item
-                itemData = GetItemData(item)
+        if Type(value) = "roArray"
+            for each item in value
+                itemData = GetItemData(item, imageByGame)
                 itemContent = contentNode.createChild("ContentNode")
                 itemContent.setFields(itemData)
             end for
@@ -36,25 +50,30 @@ sub GetCategoryContent()
 end sub
 
 
-function GetItemData(game as Object) as Object
+function GetItemData(game as Object, imageByGame as Object) as Object
     item = {}
-    if game = "people"
-        item.hdgridposterurl = "pkg:/images/People_Icon.jpg"
-        item.hdposterurl = "pkg:/images/People_Icon.jpg"
-        item.shortdescriptionline1 = game
-    else if game = "planets"
-        item.hdgridposterurl = "pkg:/images/Planet_Icon.jpg"
-        item.hdposterurl = "pkg:/images/Planet_Icon.jpg"
-        item.shortdescriptionline1 = game
-    else if game = "starships"
-        item.hdgridposterurl = "pkg:/images/Starships_Icon.jpg"
-        item.hdposterurl = "pkg:/images/Starships_Icon.jpg"
-        item.shortdescriptionline1 = game
-    else
-        print "else item/ game: " + game
-        item.hdgridposterurl = "pkg:/images/People_Icon.jpg"
-        item.hdposterurl = "pkg:/images/People_Icon.jpg"
-        item.shortdescriptionline1 = game
+
+    gameName = ""
+    if Type(game) = "roString" then
+        gameName = game
+    else if Type(game) = "roAssociativeArray"
+        if game.name <> invalid then
+            gameName = game.name
+        else if game.game <> invalid then
+            gameName = game.game
+        end if
     end if
+
+    gameKey = LCase(gameName)
+    poster = "pkg:/images/channelPoster_hd.png"
+
+    if imageByGame <> invalid and imageByGame[gameKey] <> invalid and imageByGame[gameKey] <> "" then
+        poster = imageByGame[gameKey]
+    end if
+
+    item.hdgridposterurl = poster
+    item.hdposterurl = poster
+    item.shortdescriptionline1 = gameName
+
     return item
 end function

@@ -2,7 +2,8 @@ sub ShowSearchScreen()
     m.SearchScreen = CreateObject("roSGNode", "SearchScreen")
     m.SearchScreen.ObserveField("input", "OnSearchTextChanged")
     m.SearchScreen.ObserveField("selectedItem", "OnItemChosen")
-    ShowScreen(m.SearchScreen) ' show SearchScreen
+    ShowScreen(m.SearchScreen)
+    ' Preload all clips before the user types a query.
     RunContentTask("", "")
 end sub
 

@@ -1,6 +1,4 @@
-'This handles all the navigation betweens screens. When a new screen is created,
-'it is added to the screen stack, and I add observers to certain fields so I know
-'when to run tasks and transition to other screens.
+' Navigation stack utilities: push/show screens, close screens, and restore focus.
 sub InitScreenStack()
     m.screenStack = []
 end sub
@@ -29,10 +27,7 @@ sub CloseScreen(node as Object)
             prev.visible = true
             ' Move focus into the primary interactive child on the previous screen.
             child = invalid
-            child = prev.FindNode("categoryGrid")
-            if child = invalid then
-                child = prev.FindNode("itemsGrid")
-            end if
+            child = prev.FindNode("itemsGrid")
             if child = invalid then
                 child = prev.FindNode("itemsList")
             end if
@@ -85,11 +80,6 @@ sub OnItemChosen()
     node.Update({ children: [selectedClip.Clone(false)] }, true)
     ShowVideoScreen(node, 0, true)
 end sub
-
-sub OnPlayButtonSelected()
-    'ShowVideoScreen()
-end sub
-
 
 function GetCurrentScreen()
     return m.screenStack.Peek()

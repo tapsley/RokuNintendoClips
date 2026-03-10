@@ -1,8 +1,8 @@
 sub Init()
-    m.top.functionName = "GetCategoryContent"
+    m.top.functionName = "LoadVideoContent"
 end sub
 
-sub GetCategoryContent()
+sub LoadVideoContent()
     
     contentNode = CreateObject("roSGNode", "ContentNode")
     query = m.top.input
@@ -52,7 +52,7 @@ function GetItemData(game as Object) as Object
             videoUrl = game.url
         end if
 
-        posterUri = "pkg:/images/People_Icon.jpg"
+        posterUri = "pkg:/images/channelPoster_hd.png"
         if game.thumbnailUrl <> invalid and game.thumbnailUrl <> "" then
             posterUri = game.thumbnailUrl
         end if
@@ -70,8 +70,8 @@ function GetItemData(game as Object) as Object
             videoUrl = game.url
         end if
 
-        item.hdgridposterurl = "pkg:/images/People_Icon.jpg"
-        item.hdposterurl = "pkg:/images/People_Icon.jpg"
+        item.hdgridposterurl = "pkg:/images/channelPoster_hd.png"
+        item.hdposterurl = "pkg:/images/channelPoster_hd.png"
         item.title = "Untitled"
         item.shortdescriptionline1 = "Untitled"
         item.shortdescriptionline2 = game.description

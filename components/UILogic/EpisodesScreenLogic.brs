@@ -42,12 +42,12 @@ end sub
 sub OnEpisodesFilterChanged()
     if m.EpisodesScreen = invalid then return
 
-    category = ""
+    game = ""
     if m.currentGame <> invalid then
-        category = m.currentGame
+        game = m.currentGame
     end if
     input = m.EpisodesScreen.input
-    RunContentTask(category, input)
+    RunContentTask(game, input)
 end sub
 
 sub OnEpisodesScreenItemSelected(event as Object)

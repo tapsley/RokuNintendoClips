@@ -29,13 +29,8 @@
             translation="[195,155]"
             basePosterSize="[200,200]"
             itemSpacing="[30,28]"
-            caption1NumLines="1"
-            caption1Font="font:SmallSystemFont"
-            caption1Color="0x0D61D3"
             numColumns="4"
             animateToItem="1"
-            enableCaptionScroller="true"
-            captionBackgroundBitmapUri="pkg:/images/caption_bg.png"
             numRows="3"/>
 
 

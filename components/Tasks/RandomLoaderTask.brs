@@ -44,7 +44,7 @@ sub LoadRandomContent()
 	description = ""
 	if itemData.description <> invalid then description = itemData.description
 
-	poster = "pkg:/images/People_Icon.jpg"
+	poster = "pkg:/images/channelPoster_hd.png"
 	if itemData.thumbnail <> invalid and itemData.thumbnail <> "" then poster = itemData.thumbnail
 
 	clip = root.CreateChild("ContentNode")
