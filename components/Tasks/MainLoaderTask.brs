@@ -11,9 +11,12 @@ sub LoadVideoContent()
     game = m.top.game
     if game = invalid then game = ""
 
-    url = "https://www.tapsley.space/api/videos/search?q=" + query
+    encodedQuery = UrlEncode(query)
+    encodedGame = UrlEncode(game)
+
+    url = "https://www.tapsley.space/api/videos/search?q=" + encodedQuery
     if game <> "" then
-        url = "https://www.tapsley.space/api/videos/search?game=" + game + "&q=" + query
+        url = "https://www.tapsley.space/api/videos/search?game=" + encodedGame + "&q=" + encodedQuery
     end if
 
     xfer = CreateObject("roURLTransfer")
@@ -42,6 +45,12 @@ sub LoadVideoContent()
     m.top.content = contentNode
         
 end sub
+
+function UrlEncode(value as String) as String
+    if value = invalid then return ""
+    xfer = CreateObject("roURLTransfer")
+    return xfer.Escape(value)
+end function
 
 
 function GetItemData(game as Object) as Object
